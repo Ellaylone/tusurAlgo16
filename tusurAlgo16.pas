@@ -22,34 +22,52 @@ procedure insertInTree(var Root: PTree; InName: string; InDate: string);
 	
 begin
 	if Root=NIL then CreateNode(Root, InName, InDate) { создаем новый узел дерева }
-	// else
-		// if Root^.Left=NIL then insertInTree(Root^.Left, InName, InDate)
-		// else 
-		// writeln(Root^.Left=NIL);
-		// with Root^ do begin
-		// 	if value < X then Insert(Right, X)
-		// 	else
-		// 		if value > X Then Insert(Left, X)
-		// 		else 
-		// 		{ Действия, производимые в случае повторного
-		// 		внесения элементов в дерево}
-		// end;
+	else
+		if Root^.Left=NIL then begin
+			insertInTree(Root^.Left, InName, InDate);
+		end else if Root^.Right=NIL then begin 
+			insertInTree(Root^.Right, InName, InDate);
+		end else writeln('This node already has 2 children');
 end;
-// Procedure obhod(p:tree); 
-// Begin 
-//    if p<>nil then 
-//    begin 
-//       obhod(p^.left); 
-//       writeln(p^.inf); 
-//       obhod(p^.right); 
-//    end; 
-// end;
+procedure walkTreeLR(p:PTree); 
+Begin 
+   if p<>nil then 
+   begin 
+      walkTreeLR(p^.left); 
+      writeln(p^.name, ' ', p^.birthDate); 
+      walkTreeLR(p^.right); 
+   end; 
+end;
+procedure addChildrenByName(p: PTree; nodeName: string);
+var
+	inputName, inputDate: string;
 begin
-	TempName := 'name';
-	TempDate := '2014.01.01';
+	if p<>nil then 
+	begin 
+		walkTreeLR(p^.left); 
+		if p^.name=nodeName then begin
+			writeln('Enter name');
+			readln(inputName);
+			writeln('Enter birth date');
+			readln(inputDate);
+			insertInTree(p, inputName, inputDate);
+		end;
+		walkTreeLR(p^.right); 
+	end; 
+	writeln('Not found');
+end;
+procedure startTree(var Root: PTree);
+begin
+	writeln('Enter name');
+	readln(TempName);
+	writeln('Enter birth date');
+	readln(TempDate);
 	insertInTree(Root, TempName, TempDate);
-	insertInTree(Root, TempName, TempDate);
-	insertInTree(Root, TempName, TempDate);
+end;
+begin
+	startTree(Root);
+	addChildrenByName(Root, 'name');
+	walkTreeLR(Root);
 	writeln('Done!');
 	readln();
 end.
