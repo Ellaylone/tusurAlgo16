@@ -23,14 +23,15 @@ begin
 	if Tree=NIL then CreateNode(Tree, InName, InDate) { создаем новый узел дерева }
 	else
 		if Tree^.Left=NIL then begin
+			writeln('++', InName);
 			insertInTree(Tree^.Left, InName, InDate);
 		end else if Tree^.Right=NIL then begin 
 			insertInTree(Tree^.Right, InName, InDate);
 		end else writeln('This node already has 2 children');
 end;
-procedure walkTreeLR(var p: PTree); 
+procedure walkTreeLR(p: PTree); 
 Begin 
-   if p<>nil then 
+   if p<>NIL then 
    begin 
       writeln(p^.name, ' ', p^.birthDate); 
       walkTreeLR(p^.left); 
@@ -40,15 +41,16 @@ end;
 procedure addChildrenByName(var p: PTree; nodeName: string; TempName: string; TempDate: string);
 begin
 	writeln(p^.name);
-	if p<>nil then 
+	if p<>NIL then 
 	begin 
 		if p^.name=nodeName then begin
-			writeln(p^.name, ' ', p^.birthDate);
+			writeln('here 1');
 			insertInTree(p, TempName, TempDate);
-			// if Tree^.name=nodeName then insertInTree(Root, TempName, TempDate);
+		end else begin
+		writeln('here 2');
+			if p^.left<>NIL then addChildrenByName(p^.left, nodeName, TempName, TempDate); 
+			if p^.right<>NIL then addChildrenByName(p^.right, nodeName, TempName, TempDate); 
 		end;
-		walkTreeLR(p^.left); 
-		walkTreeLR(p^.right); 
 	end else writeln('Not found');
 end;
 procedure makeTree(var Tree: PTree; var Root: PTree);
