@@ -2,15 +2,14 @@ Program lr6;
 type
 	PTree = ^TNode;
 	TNode = record
-		name, birthDate: String;
-		Left, Right: PTree;
+		name, birthDate: String; {Значение элемента}
+		Left, Right: PTree; {Ссылки на следующий элементы}
 	end;
 var
 	Tree, Root: PTree;
-procedure insertInTree(var Tree: PTree; InName: string; InDate: string);
+procedure insertInTree(var Tree: PTree; InName: string; InDate: string); {Добавляем новый элемент в дерево}
 
-	{ Дополнительная процедура, создающая и инициализирующая новый узел }
-	procedure CreateNode(var p: PTree; NodeName: string; NodeDate: string);
+	procedure CreateNode(var p: PTree; NodeName: string; NodeDate: string); {Создаем элемент}
 	begin
 		New(p);
 		p^.name := NodeName;
@@ -20,17 +19,16 @@ procedure insertInTree(var Tree: PTree; InName: string; InDate: string);
 	end;
 	
 begin
-	if Tree=NIL then CreateNode(Tree, InName, InDate) { создаем новый узел дерева }
-	else begin
+	if Tree=NIL then CreateNode(Tree, InName, InDate) {Добавляем новый элемент}
+	else begin {Пытаемся добавить новый элемент связанный с имеющимся}
 		if Tree^.Left=NIL then begin
-			writeln('++', InName);
 			insertInTree(Tree^.Left, InName, InDate);
 		end else if Tree^.Right=NIL then begin 
 			insertInTree(Tree^.Right, InName, InDate);
 		end else writeln('This node already has 2 children');
 	end;
 end;
-procedure walkTreeLR(p: PTree); 
+procedure walkTreeLR(p: PTree); {Обход дерева слева направо}
 Begin 
 	if p<>NIL then 
 	begin 
@@ -39,22 +37,20 @@ Begin
 		walkTreeLR(p^.right); 
 	end; 
 end;
+{Добавляем новый элемент связанный с элементом у которого имя - nodeName}
 procedure addChildrenByName(var p: PTree; nodeName: string; TempName: string; TempDate: string);
 begin
-	writeln(p^.name);
 	if p<>NIL then 
 	begin 
 		if p^.name=nodeName then begin
-			writeln('here 1');
 			insertInTree(p, TempName, TempDate);
 		end else begin
-		writeln('here 2');
 			if p^.left<>NIL then addChildrenByName(p^.left, nodeName, TempName, TempDate); 
 			if p^.right<>NIL then addChildrenByName(p^.right, nodeName, TempName, TempDate); 
 		end;
 	end else writeln('Not found');
 end;
-procedure makeTree(var Tree: PTree; var Root: PTree);
+procedure makeTree(var Tree: PTree; var Root: PTree); {Создание и наполнение дерева}
 var
 	TempName, TempDate, TargetName: string;
 begin
@@ -78,8 +74,8 @@ begin
 	until false;
 end;
 begin
-	makeTree(Tree, Root);
-	walkTreeLR(Tree);
+	makeTree(Tree, Root); {Создаем дерево}
+	walkTreeLR(Tree); {Вывод дерева в консоль}
 	writeln('Done!');
 	readln();
 end.
